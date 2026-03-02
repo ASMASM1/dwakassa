@@ -62,14 +62,14 @@
         .fk-logo-place {
             width: 120px;
             height: 40px;
-            background: #F5F5F7; /* светлый фон */
+            background: #F5F5F7;
             border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
             font-size: 0.9rem;
-            color: #333333; /* темный текст для контраста, если лого не загрузится */
+            color: #333333;
             border: 1px solid #CCCCCC;
             background-image: url('Images/freekassa-logo.png');
             background-size: contain;
@@ -323,34 +323,80 @@
             margin-right: 2px;
         }
 
-        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ДЛЯ IPHONE ===== */
-        @media (max-width: 480px) {
-            body {
-                padding: 6px 4px 12px;
+        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ (горизонтальная, как на ПК) ===== */
+        @media (max-width: 600px) {
+            .withdraw-item, .income-item {
+                padding: 10px 12px;
+                gap: 8px;
             }
 
+            .card-info {
+                gap: 8px;
+            }
+
+            .mc-icon {
+                width: 32px;
+                height: 22px;
+            }
+
+            .card-details {
+                font-size: 0.8rem;
+            }
+            .card-details small {
+                font-size: 0.6rem;
+            }
+
+            .date-amount {
+                gap: 6px;
+            }
+
+            .date-box {
+                font-size: 0.8rem;
+            }
+            .date-box small {
+                font-size: 0.55rem;
+            }
+
+            .amount-box {
+                font-size: 0.95rem;
+                padding: 3px 8px;
+                min-width: 75px;
+            }
+
+            .income-amount {
+                font-size: 0.95rem;
+                padding: 3px 8px;
+                min-width: 70px;
+            }
+
+            .income-desc strong {
+                font-size: 0.8rem;
+            }
+            .income-desc span {
+                font-size: 0.65rem;
+                gap: 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
             .fk-header {
-                padding: 12px;
+                padding: 10px;
             }
 
             .logo-area {
                 width: 100%;
-                justify-content: flex-start;
+                justify-content: center;
+                margin-bottom: 6px;
             }
 
             .stats-row {
                 width: 100%;
-                justify-content: space-around;
-                gap: 8px;
-                padding: 4px 8px;
+                justify-content: center;
+                gap: 12px;
             }
 
             .stat-value {
                 font-size: 1rem;
-            }
-
-            .col {
-                padding: 14px 12px;
             }
 
             .col-header h2 {
@@ -358,86 +404,62 @@
             }
 
             .badge-fk {
-                font-size: 0.65rem;
-                padding: 3px 10px;
+                font-size: 0.6rem;
+                padding: 3px 8px;
             }
 
             .withdraw-item, .income-item {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 10px 12px;
-                gap: 8px;
+                padding: 8px 10px;
+            }
+
+            .card-info {
+                flex: 1 1 180px;
+            }
+
+            .date-amount {
+                flex: 1 1 150px;
+            }
+
+            .date-box {
+                font-size: 0.75rem;
+            }
+
+            .amount-box {
+                font-size: 0.9rem;
+                padding: 2px 6px;
+                min-width: 70px;
+            }
+
+            .income-amount {
+                font-size: 0.9rem;
+                padding: 2px 6px;
+                min-width: 65px;
+            }
+        }
+
+        /* Для самых маленьких (iPhone SE) — сохраняем строку, но разрешаем перенос даты */
+        @media (max-width: 375px) {
+            .withdraw-item, .income-item {
+                flex-wrap: wrap;
             }
 
             .card-info {
                 width: 100%;
-                gap: 10px;
-            }
-
-            .mc-icon {
-                width: 36px;
-                height: 24px;
-            }
-
-            .card-details {
-                font-size: 0.85rem;
-            }
-            .card-details small {
-                font-size: 0.65rem;
+                margin-bottom: 4px;
             }
 
             .date-amount {
                 width: 100%;
                 justify-content: space-between;
-                gap: 8px;
             }
 
-            .date-box {
-                font-size: 0.85rem;
-            }
-            .date-box small {
-                font-size: 0.6rem;
-            }
-
-            .amount-box {
-                font-size: 1rem;
-                padding: 3px 10px;
-                min-width: 80px;
-            }
-
-            .income-amount {
-                font-size: 1rem;
-                padding: 3px 10px;
-                min-width: 70px;
-            }
-
-            .income-desc strong {
-                font-size: 0.85rem;
-            }
-            .income-desc span {
-                font-size: 0.7rem;
-                gap: 4px;
-            }
-
-            .fk-footer-note {
-                flex-direction: column;
-                gap: 8px;
-                padding: 12px 16px;
-                font-size: 0.7rem;
-            }
-        }
-
-        /* Для очень маленьких экранов (iPhone SE) */
-        @media (max-width: 375px) {
-            .date-amount {
-                flex-wrap: wrap;
-                justify-content: flex-start;
-            }
             .date-box {
                 white-space: normal;
+                font-size: 0.7rem;
             }
+
             .amount-box {
-                margin-left: 0;
+                font-size: 0.85rem;
             }
         }
 
@@ -458,7 +480,6 @@
     <div class="fk-header">
         <div class="logo-area">
             <div class="fk-logo-place" title="FreeKassa"></div>
-            <!-- Надпись Freekassa удалена по просьбе пользователя -->
         </div>
         <div class="stats-row">
             <div class="stat-item">
