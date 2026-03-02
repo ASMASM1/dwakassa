@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>FreeKassa — История операций</title>
+    <style>
+        /* ========== СТРУКТУРА ПРОЕКТА ==========
+        Проект должен быть размещён в репозитории GitHub со следующей структурой:
+        (корневая папка)/
+        ├── index.html          (этот файл)
+        ├── Images/              (папка с большой буквы I)
+        │   ├── freekassa-logo.png
+        │   └── mastercard.png
+        └── (другие файлы при необходимости)
+
+        Важно: название папки Images должно точно совпадать по регистру (Images).
+        ======================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #0A0A0C;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 10px 6px 20px;
+        }
+
+        .freekassa-app {
+            max-width: 1280px;
+            width: 100%;
+            background: #121212;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px #000000, 0 0 0 1px #2A2A2A;
+            overflow: hidden;
+        }
+
+        .fk-header {
+            background: #121212;
+            padding: 14px 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #2D2D2D;
+            gap: 12px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Светлый фон для логотипа FreeKassa (темный логотип будет виден) */
+        .fk-logo-place {
+            width: 120px;
+            height: 40px;
+            background: #F5F5F7; /* светлый фон */
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333333; /* темный текст для контраста, если лого не загрузится */
+            border: 1px solid #CCCCCC;
+            background-image: url('Images/freekassa-logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #F5F5F7;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: #1B1B1B;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 1px solid #3A3A3A;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #A0A0A0;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #F0F0F0;
+            line-height: 1.2;
+        }
+
+        .stat-trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #8DF2A0;
+        }
+
+        .fk-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px 16px 28px;
+            gap: 20px;
+            background: #0A0A0C;
+        }
+
+        .col {
+            flex: 1 1 400px;
+            min-width: 280px;
+            background: #181818;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.03);
+            padding: 18px 16px 22px;
+            border: 1px solid #2C2C2C;
+        }
+
+        .col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2F2F2F;
+        }
+
+        .col-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            color: #FFFFFF;
+        }
+
+        .badge-fk {
+            background: #252525;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #CCCCCC;
+            border: 1px solid #4A4A4A;
+            white-space: nowrap;
+        }
+
+        /* ===== ЭЛЕМЕНТЫ ВЫВОДА ===== */
+        .withdraw-item {
+            background: #222222;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            padding: 12px 14px;
+            border: 1px solid #3B3B3B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 2 1 240px;
+            min-width: 0;
+        }
+
+        .mc-icon {
+            width: 40px;
+            height: 26px;
+            background: url('Images/mastercard.png') no-repeat center;
+            background-size: contain;
+            display: inline-block;
+            filter: brightness(1.2) drop-shadow(0 2px 4px black);
+            flex-shrink: 0;
+        }
+
+        .card-details {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #E5E5E5;
+            line-height: 1.3;
+            word-break: break-word;
+            min-width: 0;
+        }
+        .card-details small {
+            font-weight: 400;
+            color: #A0A0A0;
+            font-size: 0.7rem;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .date-amount {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1 1 200px;
+            justify-content: flex-end;
+            min-width: 0;
+        }
+
+        .date-box {
+            text-align: left;
+            font-size: 0.9rem;
+            color: #CCCCCC;
+            font-weight: 600;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+        .date-box small {
+            font-size: 0.65rem;
+            color: #888888;
+            display: block;
+            font-weight: 400;
+        }
+
+        .amount-box {
+            text-align: right;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: #2D2D2D;
+            padding: 4px 12px;
+            border-radius: 40px;
+            color: #FFE5B4;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+            border: 1px solid #5A5A5A;
+            min-width: 90px;
+            white-space: nowrap;
+        }
+        .amount-sub {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #B0B0B0;
+        }
+
+        /* ===== ЭЛЕМЕНТЫ ДОХОДА ===== */
+        .income-item {
+            background: #222222;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            padding: 12px 14px;
+            border: 1px solid #3B3B3B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .income-desc {
+            display: flex;
+            flex-direction: column;
+            flex: 2 1 240px;
+            min-width: 0;
+        }
+        .income-desc strong {
+            font-size: 0.9rem;
+            color: #F0F0F0;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        .income-desc span {
+            font-size: 0.75rem;
+            color: #B0B0B0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 3px;
+        }
+        .shop-badge {
+            background: #333333;
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #DDDDDD;
+            border: 1px solid #555555;
+            white-space: nowrap;
+        }
+
+        .income-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: #2D2D2D;
+            padding: 4px 12px;
+            border-radius: 40px;
+            color: #A0FFA0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #5A5A5A;
+            min-width: 80px;
+            justify-content: center;
+            white-space: nowrap;
+        }
+        .income-amount::before {
+            content: '+';
+            font-size: 1rem;
+            color: #A0FFA0;
+            font-weight: 600;
+            margin-right: 2px;
+        }
+
+        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ДЛЯ IPHONE ===== */
+        @media (max-width: 480px) {
+            body {
+                padding: 6px 4px 12px;
+            }
+
+            .fk-header {
+                padding: 12px;
+            }
+
+            .logo-area {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .stats-row {
+                width: 100%;
+                justify-content: space-around;
+                gap: 8px;
+                padding: 4px 8px;
+            }
+
+            .stat-value {
+                font-size: 1rem;
+            }
+
+            .col {
+                padding: 14px 12px;
+            }
+
+            .col-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .badge-fk {
+                font-size: 0.65rem;
+                padding: 3px 10px;
+            }
+
+            .withdraw-item, .income-item {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px 12px;
+                gap: 8px;
+            }
+
+            .card-info {
+                width: 100%;
+                gap: 10px;
+            }
+
+            .mc-icon {
+                width: 36px;
+                height: 24px;
+            }
+
+            .card-details {
+                font-size: 0.85rem;
+            }
+            .card-details small {
+                font-size: 0.65rem;
+            }
+
+            .date-amount {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            .date-box {
+                font-size: 0.85rem;
+            }
+            .date-box small {
+                font-size: 0.6rem;
+            }
+
+            .amount-box {
+                font-size: 1rem;
+                padding: 3px 10px;
+                min-width: 80px;
+            }
+
+            .income-amount {
+                font-size: 1rem;
+                padding: 3px 10px;
+                min-width: 70px;
+            }
+
+            .income-desc strong {
+                font-size: 0.85rem;
+            }
+            .income-desc span {
+                font-size: 0.7rem;
+                gap: 4px;
+            }
+
+            .fk-footer-note {
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px 16px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Для очень маленьких экранов (iPhone SE) */
+        @media (max-width: 375px) {
+            .date-amount {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+            .date-box {
+                white-space: normal;
+            }
+            .amount-box {
+                margin-left: 0;
+            }
+        }
+
+        .fk-footer-note {
+            padding: 14px 20px 16px;
+            background: #121212;
+            border-top: 1px solid #2A2A2A;
+            font-size: 0.7rem;
+            color: #9C9C9C;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="freekassa-app">
+    <div class="fk-header">
+        <div class="logo-area">
+            <div class="fk-logo-place" title="FreeKassa"></div>
+            <!-- Надпись Freekassa удалена по просьбе пользователя -->
+        </div>
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="stat-label">За неделю</span>
+                <span class="stat-value">59 200 ₽</span>
+                <span class="stat-trend">▲ +12.4%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">За день</span>
+                <span class="stat-value">11 750 ₽</span>
+                <span class="stat-trend">▲ +8.2%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="fk-content">
+        <!-- Колонка истории выводов -->
+        <div class="col">
+            <div class="col-header">
+                <h2>История выводов</h2>
+                <div class="badge-fk">на карту</div>
+            </div>
+            <div id="withdrawals-list"></div>
+        </div>
+
+        <!-- Колонка истории доходов -->
+        <div class="col">
+            <div class="col-header">
+                <h2>История доходов</h2>
+                <div class="badge-fk">магазин</div>
+            </div>
+            <div id="incomes-list"></div>
+        </div>
+    </div>
+
+    <div class="fk-footer-note">
+        <span>На карту (руб. счёт) 5536 **** **** **17 · MasterCard</span>
+        <span>Комиссия 4% при выводе</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const withdrawals = [
+            { date: '01.03.2026', time: '09:22', amount: 5000 },
+            { date: '27.02.2026', time: '15:10', amount: 10000 },
+            { date: '24.02.2026', time: '11:45', amount: 5000 },
+            { date: '23.02.2026', time: '13:20', amount: 5000 },
+            { date: '22.02.2026', time: '17:35', amount: 5000 },
+            { date: '21.02.2026', time: '09:42', amount: 5000 },
+            { date: '20.02.2026', time: '12:18', amount: 5000 },
+            { date: '18.02.2026', time: '10:05', amount: 10000 },
+            { date: '27.02.2026', time: '09:30', amount: 5000 },
+            { date: '17.02.2026', time: '14:55', amount: 5000 },
+            { date: '13.02.2026', time: '16:20', amount: 5000 },
+            { date: '11.02.2026', time: '08:10', amount: 15000 },
+            { date: '10.02.2026', time: '19:40', amount: 5000 },
+            { date: '06.02.2026', time: '13:15', amount: 10000 }
+        ];
+
+        function generateIncomes(w) {
+            return w.map(item => {
+                let [h, m] = item.time.split(':').map(Number);
+                let newH = h - (4 + Math.floor(Math.random() * 3));
+                if (newH < 0) newH += 24;
+                let newM = Math.floor(Math.random() * 60);
+                return {
+                    date: item.date,
+                    time: `${newH.toString().padStart(2,'0')}:${newM.toString().padStart(2,'0')}`,
+                    amount: item.amount,
+                    shop: 'kassa',
+                    product: 'obf'
+                };
+            });
+        }
+
+        const incomes = generateIncomes(withdrawals);
+
+        function formatWithdraw(w) {
+            const finalAmount = w.amount * 0.96;
+            return `
+                <div class="withdraw-item">
+                    <div class="card-info">
+                        <i class="mc-icon"></i>
+                        <div class="card-details">
+                            На карту (руб. счёт)<br>5536 **** **** **17
+                            <small>MasterCard</small>
+                        </div>
+                    </div>
+                    <div class="date-amount">
+                        <div class="date-box">
+                            ${w.date}<small>${w.time}</small>
+                        </div>
+                        <div class="amount-box">
+                            − ${finalAmount.toFixed(0)} ₽
+                            <span class="amount-sub">комиссия 4%</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatIncome(i) {
+            return `
+                <div class="income-item">
+                    <div class="income-desc">
+                        <strong>Пополнение счёта (Доход с магазина)</strong>
+                        <span>
+                            ${i.date}, ${i.time} · Магазин: ${i.shop} · Товар: ${i.product}
+                            <span class="shop-badge">доход</span>
+                        </span>
+                    </div>
+                    <div class="income-amount">${i.amount} ₽</div>
+                </div>
+            `;
+        }
+
+        document.getElementById('withdrawals-list').innerHTML = withdrawals.map(formatWithdraw).join('');
+        document.getElementById('incomes-list').innerHTML = incomes.map(formatIncome).join('');
+    })();
+</script>
+</body>
+</html>
