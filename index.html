@@ -58,7 +58,6 @@
             align-items: center;
         }
 
-        /* Светлый фон для логотипа FreeKassa (темный логотип будет виден) */
         .fk-logo-place {
             width: 120px;
             height: 40px;
@@ -194,7 +193,6 @@
             flex-shrink: 0;
         }
 
-        /* Улучшенное отображение данных карты: заголовок и номер в одной строке, MasterCard отдельно */
         .card-details {
             display: flex;
             flex-direction: column;
@@ -214,7 +212,7 @@
         }
         .card-number {
             font-weight: 600;
-            word-break: break-word; /* на случай, если номер всё же перенесётся */
+            word-break: break-word;
         }
         .card-details small {
             font-weight: 400;
@@ -227,9 +225,10 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            flex: 1 1 200px;
+            flex: 1 1 300px;
             justify-content: flex-end;
             min-width: 0;
+            flex-wrap: wrap;
         }
 
         .date-box {
@@ -247,7 +246,6 @@
             font-weight: 400;
         }
 
-        /* Овал для суммы — гарантируем, что содержимое не вылезает */
         .amount-box {
             text-align: right;
             font-weight: 700;
@@ -260,10 +258,10 @@
             flex-direction: column;
             line-height: 1.2;
             border: 1px solid #5A5A5A;
-            min-width: 90px;
-            max-width: 140px; /* ограничим максимальную ширину, чтобы овал не растягивался */
+            min-width: 100px;
+            max-width: 150px;
             white-space: nowrap;
-            box-sizing: content-box; /* чтобы padding не увеличивал ширину сверх min-width */
+            box-sizing: content-box;
         }
         .amount-box .amount-value {
             overflow: hidden;
@@ -275,6 +273,19 @@
             color: #B0B0B0;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .withdraw-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8DF2A0;
+            background: #1E3A2A;
+            padding: 2px 10px;
+            border-radius: 30px;
+            border: 1px solid #3F975F;
+            white-space: nowrap;
+            display: inline-block;
+            line-height: 1.4;
         }
 
         /* ===== ЭЛЕМЕНТЫ ДОХОДА ===== */
@@ -334,9 +345,9 @@
             gap: 4px;
             border: 1px solid #5A5A5A;
             min-width: 80px;
+            max-width: 120px;
             justify-content: center;
             white-space: nowrap;
-            max-width: 120px;
             box-sizing: content-box;
         }
         .income-amount::before {
@@ -347,54 +358,76 @@
             margin-right: 2px;
         }
 
-        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ (горизонтальная, как на ПК) ===== */
-        @media (max-width: 600px) {
+        /* ===== КНОПКА ПОКАЗАТЬ ВСЁ ===== */
+        .show-all-btn {
+            display: block;
+            width: 100%;
+            background: #2A2A2A;
+            border: 1px solid #4A4A4A;
+            color: #CCCCCC;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 40px;
+            text-align: center;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .show-all-btn:hover {
+            background: #333333;
+            color: #FFFFFF;
+            border-color: #6A6A6A;
+        }
+        .show-all-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+        @media (max-width: 700px) {
             .withdraw-item, .income-item {
                 padding: 10px 12px;
                 gap: 8px;
             }
-
             .card-info {
                 gap: 8px;
             }
-
             .mc-icon {
                 width: 32px;
                 height: 22px;
             }
-
             .card-row {
                 font-size: 0.8rem;
             }
             .card-details small {
                 font-size: 0.6rem;
             }
-
             .date-amount {
-                gap: 6px;
+                gap: 8px;
             }
-
             .date-box {
                 font-size: 0.8rem;
             }
             .date-box small {
                 font-size: 0.55rem;
             }
-
             .amount-box {
                 font-size: 0.95rem;
                 padding: 3px 8px;
-                min-width: 75px;
-                max-width: 120px;
+                min-width: 90px;
+                max-width: 130px;
             }
-
+            .withdraw-status {
+                font-size: 0.7rem;
+                padding: 2px 6px;
+            }
             .income-amount {
                 font-size: 0.95rem;
                 padding: 3px 8px;
                 min-width: 70px;
                 max-width: 110px;
             }
-
             .income-desc strong {
                 font-size: 0.8rem;
             }
@@ -402,95 +435,92 @@
                 font-size: 0.65rem;
                 gap: 4px;
             }
+            .show-all-btn {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .date-amount {
+                justify-content: flex-start;
+            }
         }
 
         @media (max-width: 480px) {
             .fk-header {
                 padding: 10px;
             }
-
             .logo-area {
                 width: 100%;
                 justify-content: center;
                 margin-bottom: 6px;
             }
-
             .stats-row {
                 width: 100%;
                 justify-content: center;
                 gap: 12px;
             }
-
             .stat-value {
                 font-size: 1rem;
             }
-
             .col-header h2 {
                 font-size: 1.1rem;
             }
-
             .badge-fk {
                 font-size: 0.6rem;
                 padding: 3px 8px;
             }
-
             .withdraw-item, .income-item {
                 padding: 8px 10px;
             }
-
             .card-info {
                 flex: 1 1 180px;
             }
-
             .date-amount {
-                flex: 1 1 150px;
+                flex: 1 1 220px;
             }
-
             .date-box {
                 font-size: 0.75rem;
             }
-
             .amount-box {
                 font-size: 0.9rem;
                 padding: 2px 6px;
-                min-width: 70px;
+                min-width: 80px;
                 max-width: 110px;
             }
-
+            .withdraw-status {
+                font-size: 0.65rem;
+                padding: 1px 5px;
+            }
             .income-amount {
                 font-size: 0.9rem;
                 padding: 2px 6px;
                 min-width: 65px;
                 max-width: 100px;
             }
+            .show-all-btn {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
         }
 
-        /* Для самых маленьких (iPhone SE) — сохраняем строку, но разрешаем перенос даты */
         @media (max-width: 375px) {
-            .withdraw-item, .income-item {
-                flex-wrap: wrap;
-            }
-
-            .card-info {
-                width: 100%;
-                margin-bottom: 4px;
-            }
-
             .date-amount {
-                width: 100%;
-                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 6px;
             }
-
             .date-box {
                 white-space: normal;
                 font-size: 0.7rem;
             }
-
             .amount-box {
                 font-size: 0.85rem;
                 max-width: 100px;
             }
-
+            .withdraw-status {
+                font-size: 0.6rem;
+            }
             .card-row {
                 font-size: 0.75rem;
             }
@@ -535,7 +565,8 @@
                 <h2>История выводов</h2>
                 <div class="badge-fk">на карту</div>
             </div>
-            <div id="withdrawals-list"></div>
+            <div id="withdrawals-list" class="withdraw-list"></div>
+            <div id="show-all-container" class="show-all-btn" style="display: none;">Показать всё</div>
         </div>
 
         <!-- Колонка истории доходов -->
@@ -544,7 +575,7 @@
                 <h2>История доходов</h2>
                 <div class="badge-fk">магазин</div>
             </div>
-            <div id="incomes-list"></div>
+            <div id="incomes-list" class="incomes-list"></div>
         </div>
     </div>
 
@@ -556,7 +587,8 @@
 
 <script>
     (function() {
-        const withdrawals = [
+        // Все данные выводов
+        const allWithdrawals = [
             { date: '01.03.2026', time: '09:22', amount: 5000 },
             { date: '27.02.2026', time: '15:10', amount: 10000 },
             { date: '24.02.2026', time: '11:45', amount: 5000 },
@@ -573,6 +605,7 @@
             { date: '06.02.2026', time: '13:15', amount: 10000 }
         ];
 
+        // Генерация доходов (полный массив)
         function generateIncomes(w) {
             return w.map(item => {
                 let [h, m] = item.time.split(':').map(Number);
@@ -589,10 +622,12 @@
             });
         }
 
-        const incomes = generateIncomes(withdrawals);
+        const incomes = generateIncomes(allWithdrawals);
 
+        // Функции форматирования
         function formatWithdraw(w) {
             const finalAmount = w.amount * 0.96;
+            const formattedAmount = finalAmount.toFixed(2).replace('.', ',');
             return `
                 <div class="withdraw-item">
                     <div class="card-info">
@@ -610,9 +645,10 @@
                             ${w.date}<small>${w.time}</small>
                         </div>
                         <div class="amount-box">
-                            <span class="amount-value">− ${finalAmount.toFixed(0)} ₽</span>
+                            <span class="amount-value">− ${formattedAmount} ₽</span>
                             <span class="amount-sub">комиссия 4%</span>
                         </div>
+                        <span class="withdraw-status">Выполнено</span>
                     </div>
                 </div>
             `;
@@ -633,8 +669,34 @@
             `;
         }
 
-        document.getElementById('withdrawals-list').innerHTML = withdrawals.map(formatWithdraw).join('');
-        document.getElementById('incomes-list').innerHTML = incomes.map(formatIncome).join('');
+        const withdrawalsContainer = document.getElementById('withdrawals-list');
+        const incomesContainer = document.getElementById('incomes-list');
+        const showAllBtn = document.getElementById('show-all-container');
+
+        // Показываем только первые 5 записей
+        const visibleCount = 5;
+        let showingAll = false;
+
+        function renderWithdrawals(showAll) {
+            const itemsToRender = showAll ? allWithdrawals : allWithdrawals.slice(0, visibleCount);
+            withdrawalsContainer.innerHTML = itemsToRender.map(formatWithdraw).join('');
+            if (!showAll && allWithdrawals.length > visibleCount) {
+                showAllBtn.style.display = 'block';
+            } else {
+                showAllBtn.style.display = 'none';
+            }
+        }
+
+        // Изначально показываем не все
+        renderWithdrawals(false);
+
+        // Показываем все доходы (они всегда полные)
+        incomesContainer.innerHTML = incomes.map(formatIncome).join('');
+
+        // Обработчик кнопки
+        showAllBtn.addEventListener('click', function() {
+            renderWithdrawals(true);
+        });
     })();
 </script>
 </body>
